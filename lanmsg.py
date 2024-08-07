@@ -15,7 +15,7 @@ class Peer:
         self.username: str = username
         self.chat_port: int = chat_port
         self.peers: Dict[socket.socket, str] = {}
-        self.channels: Dict[str, List[socket.socket]] = {}
+        self.channels: Dict[str, List[socket.SOCKET]] = {}
         self.default_channel: str = ''
 
         # Setup UDP broadcast socket with a random port
@@ -134,6 +134,23 @@ class Peer:
                     self.broadcast(f"Topic for {self.default_channel}: {topic}", self.default_channel)
                 else:
                     print("Please join or create a channel using the /join <channel_name> command.")
+            elif command.startswith("/quit"):
+                message = " ".join(command.split(" ")[1:])
+                print(f"Quitting: {message}")
+                sys.exit(0)
+            elif command.startswith("/invite"):
+                _, nickname, channel = command.split(" ", 2)
+                for peer, name in self.peers.items():
+                    if name == nickname:
+                        peer.send(f"Invitation to join channel {channel} from {self.username}\n".encode())
+                        break
+            elif command.startswith("/kick"):
+                _, channel, nickname = command.split(" ", 2)
+                for peer, name in self.peers.items():
+                    if name == nickname:
+                        peer.send(f"You have been kicked from channel {channel}\n".encode())
+                        self.channels[channel].remove(peer)
+                        break
             else:
                 if self.default_channel:
                     self.broadcast(f"{self.username}@{self.default_channel}: {command}", self.default_channel)
@@ -141,6 +158,11 @@ class Peer:
                     print("Please join or create a channel using the /join <channel_name> command.")
 
     def connect_to_peer(self, peer_ip: str, peer_port: int) -> None:
+        """
+        Connects to a peer.
+        peer_ip: str - The IP address of the peer.
+        peer_port: int - The port number of the peer.
+        """
         peer_socket: socket.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         peer_socket.connect((peer_ip, peer_port))
         self.peers[peer_socket] = None
