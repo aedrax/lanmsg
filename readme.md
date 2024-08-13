@@ -1,20 +1,23 @@
 # LanMsg
 
-LanMsg is a peer-to-peer (P2P) chat application that allows users to communicate within a local network (LAN) without
-the need for a central server. The application supports channels, private messaging, and automatic peer discovery using
-UDP broadcasting.
+LanMsg is a peer-to-peer (P2P) chat application that allows users to communicate
+within a local network (LAN) without the need for a central server. The 
+application supports channels, nickname changes, action messages, topic setting,
+and more. It is implemented using Python's `asyncio` library for asynchronous
+operations.
 
 ## Features
 
 - **Channels**: Users can join and create channels.
-- **Private Messaging**: Users can send private messages to each other.
-- **Broadcast Messaging**: Messages can be sent to all users within a channel.
-- **User Management**: Users can join and leave the chat.
+- **Nickname Changes**: Users can change their nickname.
+- **Action Messages**: Users can send action messages to the current channel.
+- **Topic Setting**: Users can set the topic for the current channel.
 - **Automatic Peer Discovery**: Peers are automatically discovered within the LAN using UDP broadcasting.
+- **Help Command**: Users can view a list of available commands and their descriptions.
 
 ## Requirements
 
-- Python 3.x
+- Python 3.6+
 
 ## Installation
 
@@ -40,26 +43,39 @@ python lanmsg.py <username>
 2. **Automatic Discovery**:
    - The peers will automatically discover each other and connect without specifying IP addresses.
 
-3. **Messaging**:
-   - Use `/msg <username> <message>` for private messaging.
-   - Type messages normally to broadcast within a channel.
+3. **Join a Channel**:
+   - Use the `/join <channel_name>` command to join or create a channel.
+
+4. **Use Commands**:
+   - Use the available commands to interact with other users.
 
 ## Commands
 
-- **/msg <username> <message>**: Send a private message to a specific user.
-- **Normal text**: Sends a message to the current channel.
+- **/join <channel>**: Join or create a channel.
+- **/part**: Leave the current channel.
+- **/nick <newnickname>**: Change your nickname.
+- **/me <action>**: Send an action message to the current channel.
+- **/topic <topic>**: Set the topic for the current channel.
+- **/quit**: Quit the chat.
+- **/help**: Show the help message with available commands.
 
 ## Example
 
 ```bash
 $ python lanmsg.py Alice
-Alice's LanMsg chat server started...
-Connected to Bob's chat. Please enter your username: Alice
-Enter the channel you want to join: general
-Joined channel general. You can now start chatting.
-
+Alice's LanMsg peer started...
+Alice@no_channel: /join general
+Joined channel general.
 Alice@general: Hello everyone!
-/msg Bob Hi Bob, how are you?
+Alice@general: /nick AliceNew
+Nickname changed to AliceNew.
+AliceNew@general: /me waves
+* AliceNew waves
+AliceNew@general: /topic Today's discussion
+AliceNew@general: /part
+Left channel general.
+Alice@no_channel: /quit
+Quitting...
 ```
 
 ## License
@@ -73,3 +89,18 @@ If you would like to contribute to the project, please fork the repository and s
 ## Authors
 
 - [Paul Sorensen](https://github.com/aedrax)
+
+
+### Instructions:
+1. **Run the Script**:
+   - Start the script on multiple machines within the same LAN.
+   - `python lanmsg.py <username>`
+
+2. **Automatic Discovery**:
+   - The peers will automatically discover each other and connect without specifying IP addresses.
+
+3. **Join a Channel**:
+   - Use the `/join <channel_name>` command to join or create a channel.
+
+4. **Use Commands**:
+   - Use the available commands to interact with other users.
